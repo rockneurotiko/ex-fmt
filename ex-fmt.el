@@ -29,11 +29,11 @@
 (defun ex-fmt--find-file-in-hierarchy (current-dir fname)
   "Starting from `CURRENT-DIR', search for a file named `FNAME' upwards through the directory hierarchy."
   (let ((file (concat current-dir fname))
-        (parent (jmr--parent-directory (expand-file-name current-dir))))
+        (parent (ex-fmt--parent-directory (expand-file-name current-dir))))
     (if (file-exists-p file)
         file
       (when parent
-        (jmr--find-file-in-hierarchy parent fname)))))
+        (ex-fmt--find-file-in-hierarchy parent fname)))))
 
 ;;;###autoload
 (defun ex-fmt-after-save ()
