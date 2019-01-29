@@ -11,8 +11,13 @@
   (let* ((cfgpath (ex-fmt--find-file-in-hierarchy "." ".formatter.exs"))
          (cmd (if cfgpath
                   (format "%s %s format --dot-formatter %s %s" ex-fmt-elixir ex-fmt-mix cfgpath codepath)
-                (format "%s %s format %s" ex-fmt-elixir ex-fmt-mix codepath))))
-    (ex-fmt--execute cmd)))
+                (format "%s %s format %s" ex-fmt-elixir ex-fmt-mix codepath)))
+         (cfg-directory (file-name-directory cfgpath))
+         (previously-directory default-directory))
+
+    (setq default-directory cfg-directory)
+     (ex-fmt--execute cmd)
+     (setq default-directory previously-directory)))
 
 (defun ex-fmt--format-current-buffer ()
   (interactive)
