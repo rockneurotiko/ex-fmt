@@ -1,22 +1,35 @@
-(defvar ex-fmt-version "0.1.0", "Elixir Formatter Version")
+(defvar ex-fmt-version "0.1.1", "Elixir Formatter Version")
 
 (defvar ex-fmt-elixir nil "Path of elixir bin")
 
 (defvar ex-fmt-mix nil "Path of mix bin")
 
+(defun ex-fmt--show-execute-errors (code output)
+  (when (/= code 0)
+    (message (concat "ex-fmt error: " output))))
+
+(defun ex-fmt--process-exit-code-and-output (program args)
+  "Run PROGRAM with ARGS and return the exit code and output in a list."
+  (with-temp-buffer
+    (list (apply 'call-process program nil (current-buffer) nil args)
+          (buffer-string))))
+
 (defun ex-fmt--execute (command)
-  (shell-command-to-string command))
+  (let* ((parts (split-string command))
+         (program (car parts))
+         (args (cdr parts)))
+    (ex-fmt--process-exit-code-and-output program args)))
 
 (defun ex-fmt--format-code (codepath)
-  (let* ((cfgpath (ex-fmt--find-file-in-hierarchy "." ".formatter.exs"))
+  (let* ((cfgpath (ex-fmt--find-file-in-hierarchy default-directory ".formatter.exs"))
          (cmd (if cfgpath
                   (format "%s %s format --dot-formatter %s %s" ex-fmt-elixir ex-fmt-mix cfgpath codepath)
                 (format "%s %s format %s" ex-fmt-elixir ex-fmt-mix codepath)))
-         (cfg-directory (file-name-directory cfgpath))
+         (cfg-directory (if cfgpath (file-name-directory cfgpath) default-directory))
          (previously-directory default-directory))
 
     (setq default-directory cfg-directory)
-     (ex-fmt--execute cmd)
+    (apply 'ex-fmt--show-execute-errors (ex-fmt--execute cmd))
      (setq default-directory previously-directory)))
 
 (defun ex-fmt--format-current-buffer ()
@@ -35,6 +48,7 @@
   "Starting from `CURRENT-DIR', search for a file named `FNAME' upwards through the directory hierarchy."
   (let ((file (concat current-dir fname))
         (parent (ex-fmt--parent-directory (expand-file-name current-dir))))
+
     (if (file-exists-p file)
         file
       (when parent
