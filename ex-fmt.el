@@ -1,8 +1,8 @@
 (defvar ex-fmt-version "0.1.1", "Elixir Formatter Version")
 
-(defvar ex-fmt-elixir nil "Path of elixir bin")
+(defvar ex-fmt-elixir "elixir" "Path of elixir bin")
 
-(defvar ex-fmt-mix nil "Path of mix bin")
+(defvar ex-fmt-mix "mix" "Path of mix bin")
 
 (defun ex-fmt--show-execute-errors (code output)
   (when (/= code 0)
