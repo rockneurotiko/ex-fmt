@@ -1,6 +1,6 @@
-(defvar ex-fmt-version "0.1.1", "Elixir Formatter Version")
+(defvar ex-fmt-version "0.1.2", "Elixir Formatter Version")
 
-(defvar ex-fmt-elixir "elixir" "Path of elixir bin")
+;; (defvar ex-fmt-elixir "elixir" "Path of elixir bin")
 
 (defvar ex-fmt-mix "mix" "Path of mix bin")
 
@@ -22,19 +22,17 @@
 
 (defun ex-fmt--format-code (codepath)
   (let* ((cfgpath (ex-fmt--find-file-in-hierarchy default-directory ".formatter.exs"))
-         (cmd (if cfgpath
-                  (format "%s %s format --dot-formatter %s %s" ex-fmt-elixir ex-fmt-mix cfgpath codepath)
-                (format "%s %s format %s" ex-fmt-elixir ex-fmt-mix codepath)))
+         (cmd (format "%s format %s" ex-fmt-mix codepath))
          (cfg-directory (if cfgpath (file-name-directory cfgpath) default-directory))
          (previously-directory default-directory))
 
     (setq default-directory cfg-directory)
     (apply 'ex-fmt--show-execute-errors (ex-fmt--execute cmd))
-     (setq default-directory previously-directory)))
+    (setq default-directory previously-directory)))
 
 (defun ex-fmt--format-current-buffer ()
   (interactive)
-  (when (and (not (eq nil ex-fmt-elixir)) (not (eq nil ex-fmt-mix)))
+  (when (not (eq nil ex-fmt-mix))
     (ex-fmt--format-code buffer-file-name)
     (revert-buffer :ignore-auto :noconfirm)))
 
