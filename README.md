@@ -11,10 +11,8 @@ Right now the library is not on MELPA, so you can do something like this:
     (load-file "/full/path/ex-fmt/ex-fmt.el")
     (require 'ex-fmt)
 
-    ;; Optional, if you use asdf it's interesting to use it
-    ;; By default it will use "elixir" and "mix"
-    (setq ex-fmt-elixir "/home/path/.asdf/installs/elixir/1.7/bin/elixir")
-    (setq ex-fmt-mix "/home/path/.asdf/installs/elixir/1.7/bin/mix")
+    ;; Optional, if you want to use always an specific mix version
+    (setq ex-fmt-mix "/path/to/your/elixir/1.7/bin/mix")
 
     (add-hook 'after-save-hook #'ex-fmt-after-save))
 
