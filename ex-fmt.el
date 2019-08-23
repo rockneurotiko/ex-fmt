@@ -23,7 +23,7 @@
 (defun ex-fmt--format-code (codepath)
   (let* ((cfgpath (ex-fmt--find-file-in-hierarchy default-directory ".formatter.exs"))
          (cmd (if cfgpath
-                  (format "%s %s format --dot-formatter %s %s" ex-fmt-elixir ex-fmt-mix cfgpath codepath)
+                  (format "mix format %s" codepath)
                 (format "%s %s format %s" ex-fmt-elixir ex-fmt-mix codepath)))
          (cfg-directory (if cfgpath (file-name-directory cfgpath) default-directory))
          (previously-directory default-directory))
